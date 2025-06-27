@@ -48,4 +48,27 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+
+                const bars = entry.target.querySelectorAll('.bar');
+                bars.forEach(bar => {
+                    const value = bar.querySelector('.value');
+                    const percentage = value.textContent.trim().split("/")[0];
+
+                    value.style.width = percentage;
+                    value.style.maxWidth = "100%";
+                    bar.classList.add('animate');
+                });
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll("section, .profile-section").forEach(section => {
+        observer.observe(section);
+    });
 });
